@@ -92,6 +92,10 @@ cd dotfiles
 - **WebStorm** - JetBrains IDE for JavaScript/TypeScript
 - **Opencode** - AI coding assistant (Fireworks AI powered)
 
+### Productivity Tools
+- **Raycast** - Spotlight replacement with powerful extensions
+- **Contexts** - Fast window switcher with search capabilities
+
 ### VS Code Extensions
 - GitLens - Enhanced git capabilities
 - GitHub Copilot - AI pair programming
@@ -152,6 +156,8 @@ git push origin main
 |------|------|----------|
 | Git email | j.bermejo@canda.com | berme495@gmail.com |
 | IDE | VS Code | VS Code + WebStorm |
+| Spotlight | Default | Raycast |
+| Window Switcher | Default | Contexts |
 | SSL certs | Zscaler corporate certs | None (standard) |
 | VPN | Corporate VPN | Personal preference |
 | AI tools | Work-authenticated | Personal accounts |

@@ -23,6 +23,10 @@ brew "graphviz"
 # IDEs
 cask "webstorm"
 
+# Productivity Tools
+cask "raycast"        # Spotlight replacement with extensions
+cask "contexts"       # Window switcher with search
+
 # VS Code extensions (managed by Brewfile)
 vscode "eamodio.gitlens"
 vscode "github.copilot-chat"
