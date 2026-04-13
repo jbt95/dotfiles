@@ -1,0 +1,20 @@
+# Personal SSH Config
+# Generate a new key with: ssh-keygen -t ed25519 -C "berme495@gmail.com"
+# Then add to GitHub: https://github.com/settings/keys
+
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+
+# GitHub
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+
+# Add other personal hosts below
+# Host myserver
+#     HostName 192.168.1.100
+#     User myuser
+#     Port 22

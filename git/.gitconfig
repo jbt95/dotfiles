@@ -1,0 +1,28 @@
+[user]
+	email = berme495@gmail.com
+	name = Jordi Bermejo Tornero
+[init]
+	defaultBranch = main
+# GPG signing disabled - generate new key with: gpg --full-generate-key
+# Then enable with: git config --global commit.gpgsign true
+# And set key: git config --global user.signingkey YOUR_NEW_KEY_ID
+[credential]
+	helper = osxkeychain
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[core]
+	editor = code --wait
+	autocrlf = input
+[push]
+	default = simple
+[pull]
+	rebase = false
+[color]
+	ui = auto
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	lg = log --oneline --graph --decorate
+	last = log -1 HEAD
