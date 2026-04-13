@@ -193,7 +193,19 @@ else
 fi
 
 # ============================================
-# 10. Install VS Code Extensions
+# 10. Install Opencode
+# ============================================
+if ! command -v opencode &> /dev/null; then
+    info "Installing Opencode..."
+    curl -fsSL https://opencode.ai/install.sh | bash
+    success "Opencode installed"
+    warning "Remember to configure your API keys in ~/.opencode/opencode.json"
+else
+    info "Opencode already installed"
+fi
+
+# ============================================
+# 11. Install VS Code Extensions
 # ============================================
 if command -v code &> /dev/null; then
     info "Installing VS Code extensions..."
@@ -232,7 +244,10 @@ echo "     cat ~/.ssh/id_ed25519.pub"
 echo "     https://github.com/settings/keys"
 echo "  2. Restart your terminal"
 echo "  3. Run: nvm install node"
-echo "  4. (Optional) Generate GPG key for signed commits:"
+echo "  4. Configure Opencode API keys:"
+echo "     cp ~/dotfiles/opencode/opencode.json.template ~/.opencode/opencode.json"
+echo "     # Edit ~/.opencode/opencode.json and add your Fireworks API key"
+echo "  5. (Optional) Generate GPG key for signed commits:"
 echo "     gpg --full-generate-key"
 echo "     git config --global commit.gpgsign true"
 echo "     git config --global user.signingkey YOUR_KEY_ID"

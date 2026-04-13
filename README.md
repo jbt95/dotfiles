@@ -16,6 +16,7 @@ This repository contains configuration files and scripts to set up a new MacBook
 | `git/.gitconfig` | Git configuration with personal email |
 | `vscode/extensions.txt` | List of VS Code extensions |
 | `ssh/config` | SSH configuration template |
+| `opencode/` | Opencode AI assistant configuration |
 | `install.sh` | Automated setup script |
 
 ## Quick Start
@@ -55,7 +56,13 @@ cd dotfiles
    git config --global user.signingkey YOUR_KEY_ID
    ```
 
-4. **Restart your terminal** or run:
+4. **Configure Opencode:**
+   ```bash
+   cp ~/dotfiles/opencode/opencode.json.template ~/.opencode/opencode.json
+   # Edit the file and add your Fireworks AI API key
+   ```
+
+5. **Restart your terminal** or run:
    ```bash
    source ~/.zshrc
    ```
@@ -82,6 +89,7 @@ cd dotfiles
 - **pnpm** - Fast package manager
 - **Bun** - JavaScript runtime
 - **Docker** - Containerization (install Docker Desktop separately)
+- **Opencode** - AI coding assistant (Fireworks AI powered)
 
 ### VS Code Extensions
 - GitLens - Enhanced git capabilities
