@@ -11,7 +11,8 @@ brew "curl"
 
 # Infrastructure as Code
 brew "tfenv"
-brew "hashicorp/tap/terraform"
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
 
 # Optional: Visualization
 brew "graphviz"
@@ -29,4 +30,4 @@ brew "docker"         # Docker CLI
 cask "docker-desktop" # Docker Desktop GUI
 
 # Terminal
-brew "ghostty"        # Fast, native terminal emulator
+cask "ghostty"        # Fast, native terminal emulator
