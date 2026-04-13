@@ -5,11 +5,8 @@
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 
-# Theme
-# Using built-in light theme
-theme = light
-background = #ffffff
-foreground = #1a1a1a
+# Theme - Using OneHalfLight (clean white open source theme)
+theme = OneHalfLight
 
 # Window
 window-padding-x = 8
