@@ -89,6 +89,7 @@ cd dotfiles
 - **pnpm** - Fast package manager
 - **Bun** - JavaScript runtime
 - **Docker** - Containerization (install Docker Desktop separately)
+- **WebStorm** - JetBrains IDE for JavaScript/TypeScript
 - **Opencode** - AI coding assistant (Fireworks AI powered)
 
 ### VS Code Extensions
@@ -150,8 +151,7 @@ git push origin main
 | Item | Work | Personal |
 |------|------|----------|
 | Git email | j.bermejo@canda.com | berme495@gmail.com |
-| SSH keys | Work key | Fresh key generated on personal Mac |
-| GPG keys | Work key | Optional: generate new key |
+| IDE | VS Code | VS Code + WebStorm |
 | SSL certs | Zscaler corporate certs | None (standard) |
 | VPN | Corporate VPN | Personal preference |
 | AI tools | Work-authenticated | Personal accounts |

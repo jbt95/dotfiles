@@ -121,6 +121,11 @@ alias kgp='kubectl get pods'
 alias kgs='kubectl get services'
 alias kgd='kubectl get deployments'
 
+# JetBrains WebStorm
+alias ws='webstorm'
+alias ws.='webstorm .'
+alias wsp='webstorm --project'
+
 # System
 alias c='clear'
 alias h='history'

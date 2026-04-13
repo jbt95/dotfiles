@@ -20,6 +20,9 @@ brew "hashicorp/tap/terraform"
 # Optional: Visualization
 brew "graphviz"
 
+# IDEs
+cask "webstorm"
+
 # VS Code extensions (managed by Brewfile)
 vscode "eamodio.gitlens"
 vscode "github.copilot-chat"
