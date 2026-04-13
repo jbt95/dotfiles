@@ -210,9 +210,21 @@ if ! command -v opencode &> /dev/null; then
     info "Installing Opencode..."
     curl -fsSL https://opencode.ai/install.sh | bash
     success "Opencode installed"
-    warning "Remember to configure your API keys in ~/.opencode/opencode.json"
 else
     info "Opencode already installed"
+fi
+
+# Setup Opencode config
+info "Setting up Opencode configuration..."
+mkdir -p "$HOME/.opencode"
+if [ ! -f "$HOME/.opencode/opencode.json" ]; then
+    if [ -f "$DOTFILES_DIR/opencode/opencode.json.template" ]; then
+        cp "$DOTFILES_DIR/opencode/opencode.json.template" "$HOME/.opencode/opencode.json"
+        success "Opencode config copied from template"
+        warning "Remember to add your Fireworks API key to ~/.opencode/opencode.json"
+    fi
+else
+    info "Opencode config already exists"
 fi
 
 # ============================================
