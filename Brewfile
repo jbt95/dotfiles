@@ -9,14 +9,6 @@ brew "tree"
 brew "wget"
 brew "curl"
 
-# Infrastructure as Code
-brew "tfenv"
-brew tap "hashicorp/tap"
-brew install "hashicorp/tap/terraform"
-
-# Optional: Visualization
-brew "graphviz"
-
 # IDEs
 cask "webstorm"
 
