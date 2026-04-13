@@ -26,6 +26,11 @@ cask "webstorm"
 # Productivity Tools
 cask "raycast"        # Spotlight replacement with extensions
 cask "contexts"       # Window switcher with search
+cask "rectangle"      # Window management (tile windows)
+
+# Development
+brew "docker"         # Docker CLI
+cask "docker-desktop" # Docker Desktop GUI
 
 # Terminal
 brew "ghostty"        # Fast, native terminal emulator

@@ -89,6 +89,11 @@ alias dc='docker-compose'
 alias dps='docker ps'
 alias dpsa='docker ps -a'
 alias di='docker images'
+alias dprune='docker system prune -af'
+alias dvol='docker volume ls'
+alias dnet='docker network ls'
+alias dex='docker exec -it'
+alias dlogs='docker logs -f'
 
 # Terraform
 alias tf='terraform'

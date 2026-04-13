@@ -96,8 +96,10 @@ cd dotfiles
 ### Productivity Tools
 - **Raycast** - Spotlight replacement with powerful extensions
 - **Contexts** - Fast window switcher with search capabilities
+- **Rectangle** - Window tiling manager (snap windows to edges)
 
-### Terminal
+### Development & DevOps
+- **Docker Desktop** - Container management and orchestration
 - **Ghostty** - Fast, native GPU-accelerated terminal emulator with quick terminal feature
 
 ### VS Code Extensions
@@ -163,6 +165,8 @@ git push origin main
 | Terminal | iTerm | Ghostty |
 | Spotlight | Default | Raycast |
 | Window Switcher | Default | Contexts |
+| Window Tiling | Default | Rectangle |
+| Containers | Docker | Docker Desktop |
 | SSL certs | Zscaler corporate certs | None (standard) |
 | VPN | Corporate VPN | Personal preference |
 | AI tools | Work-authenticated | Personal accounts |
