@@ -6,10 +6,10 @@ font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 
 # Theme
-# NOTE: "dark" doesn't exist. Use a built-in like "Dark", or just set colors manually.
-# theme = Dark
-background = #1a1a1a
-foreground = #ffffff
+# Using built-in light theme
+theme = light
+background = #ffffff
+foreground = #1a1a1a
 
 # Window
 window-padding-x = 8
