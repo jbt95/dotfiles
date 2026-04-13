@@ -16,6 +16,7 @@ This repository contains configuration files and scripts to set up a new MacBook
 | `git/.gitconfig` | Git configuration with personal email |
 | `vscode/extensions.txt` | List of VS Code extensions |
 | `ssh/config` | SSH configuration template |
+| `ghostty/` | Ghostty terminal configuration |
 | `opencode/` | Opencode AI assistant configuration |
 | `install.sh` | Automated setup script |
 
@@ -96,6 +97,9 @@ cd dotfiles
 - **Raycast** - Spotlight replacement with powerful extensions
 - **Contexts** - Fast window switcher with search capabilities
 
+### Terminal
+- **Ghostty** - Fast, native GPU-accelerated terminal emulator with quick terminal feature
+
 ### VS Code Extensions
 - GitLens - Enhanced git capabilities
 - GitHub Copilot - AI pair programming
@@ -156,6 +160,7 @@ git push origin main
 |------|------|----------|
 | Git email | j.bermejo@canda.com | berme495@gmail.com |
 | IDE | VS Code | VS Code + WebStorm |
+| Terminal | iTerm | Ghostty |
 | Spotlight | Default | Raycast |
 | Window Switcher | Default | Contexts |
 | SSL certs | Zscaler corporate certs | None (standard) |

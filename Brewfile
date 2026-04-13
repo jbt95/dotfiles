@@ -27,6 +27,9 @@ cask "webstorm"
 cask "raycast"        # Spotlight replacement with extensions
 cask "contexts"       # Window switcher with search
 
+# Terminal
+brew "ghostty"        # Fast, native terminal emulator
+
 # VS Code extensions (managed by Brewfile)
 vscode "eamodio.gitlens"
 vscode "github.copilot-chat"

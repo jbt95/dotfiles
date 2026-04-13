@@ -1,0 +1,68 @@
+# Ghostty Configuration
+# Documentation: https://ghostty.org/docs/config
+
+# Font
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+
+# Theme
+theme = "dark"
+background = #1a1a1a
+foreground = #ffffff
+
+# Window
+window-padding-x = 8
+window-padding-y = 8
+window-decoration = true
+background-opacity = 0.95
+background-blur-radius = 20
+
+# Shell
+command = /bin/zsh
+
+# Cursor
+cursor-style = block
+cursor-click-to-move = true
+
+# Mouse
+mouse-hide-while-typing = true
+
+# Scrolling
+scrollback-lines = 10000
+
+# Clipboard
+clipboard-paste-protection = true
+clipboard-trim-trailing-spaces = true
+
+# Key Bindings
+keybind = super+t=new_tab
+keybind = super+w=close_tab
+keybind = super+shift+t=reopen_tab
+keybind = super+1=goto_tab:1
+keybind = super+2=goto_tab:2
+keybind = super+3=goto_tab:3
+keybind = super+4=goto_tab:4
+keybind = super+5=goto_tab:5
+keybind = super+d=new_split:right
+keybind = super+shift+d=new_split:down
+keybind = super+[=goto_split:previous
+keybind = super+]=goto_split:next
+keybind = super+shift+enter=toggle_fullscreen
+keybind = super+plus=increase_font_size
+keybind = super+minus=decrease_font_size
+keybind = super+0=reset_font_size
+keybind = super+k=clear_screen
+
+# Quick Terminal (dropdown terminal)
+keybind = global:super+grave=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-screen = main
+
+# macOS specific
+macos-option-as-alt = true
+macos-titlebar-proxy-icon = hidden
+macos-window-shadow = true
+
+# Performance
+renderer = metal
+fps = 120

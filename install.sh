@@ -146,6 +146,17 @@ if [ -f "$DOTFILES_DIR/ssh/config" ]; then
     success "SSH config copied"
 fi
 
+# ============================================
+# 7. Setup Ghostty configuration
+# ============================================
+info "Setting up Ghostty configuration..."
+mkdir -p "$HOME/.config/ghostty"
+if [ -f "$DOTFILES_DIR/ghostty/config" ]; then
+    remove_symlink "$HOME/.config/ghostty/config"
+    ln -sf "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
+    success "Ghostty config linked"
+fi
+
 # Generate new SSH key if it doesn't exist
 if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
     info "Generating new SSH key..."
@@ -159,7 +170,7 @@ else
 fi
 
 # ============================================
-# 7. Install NVM
+# 8. Install NVM
 # ============================================
 if [ ! -d "$HOME/.nvm" ]; then
     info "Installing NVM..."
@@ -171,7 +182,7 @@ else
 fi
 
 # ============================================
-# 8. Install Bun (optional)
+# 9. Install Bun (optional)
 # ============================================
 if ! command -v bun &> /dev/null; then
     info "Installing Bun..."
@@ -182,7 +193,7 @@ else
 fi
 
 # ============================================
-# 9. Setup pnpm
+# 10. Setup pnpm
 # ============================================
 if ! command -v pnpm &> /dev/null; then
     info "Installing pnpm..."
@@ -193,7 +204,7 @@ else
 fi
 
 # ============================================
-# 10. Install Opencode
+# 11. Install Opencode
 # ============================================
 if ! command -v opencode &> /dev/null; then
     info "Installing Opencode..."
@@ -205,7 +216,7 @@ else
 fi
 
 # ============================================
-# 11. Install VS Code Extensions
+# 12. Install VS Code Extensions
 # ============================================
 if command -v code &> /dev/null; then
     info "Installing VS Code extensions..."
