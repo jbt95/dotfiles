@@ -1,13 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 
-# Java
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-export PATH="$JAVA_HOME/bin:$PATH"
-
-# Maven
-export MAVEN_HOME="/opt/homebrew/opt/maven"
-export PATH="$MAVEN_HOME/bin:$PATH"
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -151,3 +144,14 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Local bin
 export PATH="$HOME/.local/bin:$PATH"
+
+# opencode
+export PATH=/Users/Jordi/.opencode/bin:$PATH
+
+# pnpm
+export PNPM_HOME="/Users/Jordi/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
