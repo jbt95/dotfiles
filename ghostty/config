@@ -6,7 +6,8 @@ font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 
 # Theme
-theme = "dark"
+# NOTE: "dark" doesn't exist. Use a built-in like "Dark", or just set colors manually.
+# theme = Dark
 background = #1a1a1a
 foreground = #ffffff
 
@@ -15,7 +16,7 @@ window-padding-x = 8
 window-padding-y = 8
 window-decoration = true
 background-opacity = 0.95
-background-blur-radius = 20
+background-blur = 20
 
 # Shell
 command = /bin/zsh
@@ -28,7 +29,9 @@ cursor-click-to-move = true
 mouse-hide-while-typing = true
 
 # Scrolling
-scrollback-lines = 10000
+# OLD: scrollback-lines = 10000 (removed)
+# NEW: size in bytes – 10,000 lines ≈ 10 MB
+scrollback-limit = 10485760
 
 # Clipboard
 clipboard-paste-protection = true
@@ -37,7 +40,8 @@ clipboard-trim-trailing-spaces = true
 # Key Bindings
 keybind = super+t=new_tab
 keybind = super+w=close_tab
-keybind = super+shift+t=reopen_tab
+# reopen_tab doesn't exist in Ghostty – macOS handles Cmd+Shift+T natively via Edit menu
+# keybind = super+shift+t=reopen_tab
 keybind = super+1=goto_tab:1
 keybind = super+2=goto_tab:2
 keybind = super+3=goto_tab:3
@@ -48,12 +52,13 @@ keybind = super+shift+d=new_split:down
 keybind = super+[=goto_split:previous
 keybind = super+]=goto_split:next
 keybind = super+shift+enter=toggle_fullscreen
-keybind = super+plus=increase_font_size
+# "plus" is invalid – use "equal" (Shift+= produces +)
+keybind = super+equal=increase_font_size
 keybind = super+minus=decrease_font_size
 keybind = super+0=reset_font_size
 keybind = super+k=clear_screen
 
-# Quick Terminal (dropdown terminal)
+# Quick Terminal (dropdown)
 keybind = global:super+grave=toggle_quick_terminal
 quick-terminal-position = top
 quick-terminal-screen = main
@@ -64,5 +69,6 @@ macos-titlebar-proxy-icon = hidden
 macos-window-shadow = true
 
 # Performance
-renderer = metal
-fps = 120
+# REMOVED – these fields no longer exist:
+# renderer = metal
+# fps = 120
