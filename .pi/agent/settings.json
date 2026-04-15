@@ -1,0 +1,26 @@
+{
+  "lastChangelogVersion": "0.67.2",
+  "defaultProvider": "fireworks",
+  "defaultModel": "accounts/fireworks/routers/kimi-k2p5-turbo",
+  "defaultThinkingLevel": "high",
+  "theme": "catppuccin-macchiato",
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 16384,
+    "keepRecentTokens": 20000
+  },
+  "retry": {
+    "enabled": true,
+    "maxRetries": 3
+  },
+  "enableSkillCommands": true,
+  "packages": [
+    "npm:@sherif-fanous/pi-catppuccin",
+    "npm:pi-subagents",
+    "npm:taskplane",
+    "npm:@plannotator/pi-extension",
+    "npm:pi-web-access",
+    "npm:pi-markdown-preview",
+    "npm:pi-powerline-footer"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "migrations": {
+    "applied": {
+      "add-supervisor-local-template-v1": {
+        "appliedAt": "2026-04-15T21:26:12.823Z"
+      }
+    }
+  },
+  "initAgentDefaults": {
+    "workerModel": "",
+    "reviewerModel": "",
+    "mergeModel": "",
+    "workerThinking": "high",
+    "reviewerThinking": "high",
+    "mergeThinking": "high"
+  }
+}
