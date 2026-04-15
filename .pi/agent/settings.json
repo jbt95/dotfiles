@@ -21,6 +21,7 @@
     "npm:@plannotator/pi-extension",
     "npm:pi-web-access",
     "npm:pi-markdown-preview",
-    "npm:pi-powerline-footer"
+    "npm:pi-powerline-footer",
+    "npm:pi-lens"
   ]
 }
