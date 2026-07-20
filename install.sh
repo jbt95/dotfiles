@@ -214,18 +214,85 @@ else
     info "Opencode already installed"
 fi
 
-# Setup Opencode config
+# Setup OpenCode config
 info "Setting up Opencode configuration..."
-mkdir -p "$HOME/.opencode"
-if [ ! -f "$HOME/.opencode/opencode.json" ]; then
+mkdir -p "$HOME/.config/opencode"
+if [ -L "$HOME/.config/opencode/secrets" ]; then
+    error "Refusing to use symlinked OpenCode secrets directory"
+    exit 1
+fi
+mkdir -p "$HOME/.config/opencode/secrets"
+chmod 700 "$HOME/.config/opencode/secrets"
+for credential in atlassian-user-email bitbucket-api-token context7-api-key; do
+    credential_path="$HOME/.config/opencode/secrets/$credential"
+    if [ -L "$credential_path" ]; then
+        error "Refusing to use symlinked credential file: $credential_path"
+        exit 1
+    fi
+    if [ ! -e "$credential_path" ]; then
+        touch "$credential_path"
+    fi
+    chmod 600 "$credential_path"
+done
+if [ ! -f "$HOME/.config/opencode/opencode.json" ]; then
     if [ -f "$DOTFILES_DIR/opencode/opencode.json.template" ]; then
-        cp "$DOTFILES_DIR/opencode/opencode.json.template" "$HOME/.opencode/opencode.json"
+        cp "$DOTFILES_DIR/opencode/opencode.json.template" "$HOME/.config/opencode/opencode.json"
         success "Opencode config copied from template"
-        warning "Remember to add your Fireworks API key to ~/.opencode/opencode.json"
+        warning "Create the OpenCode credential files documented in opencode/README.md"
     fi
 else
     info "Opencode config already exists"
 fi
+
+for directory in agents command skills; do
+    source_path="$DOTFILES_DIR/opencode/$directory"
+    target_path="$HOME/.config/opencode/$directory"
+    if [ ! -d "$source_path" ]; then
+        continue
+    fi
+    if [ -L "$target_path" ]; then
+        if [ "$(readlink "$target_path")" = "$source_path" ]; then
+            remove_symlink "$target_path"
+        else
+            error "Refusing to replace unmanaged symlink: $target_path"
+            exit 1
+        fi
+    fi
+    mkdir -p "$target_path"
+    while IFS= read -r target_link; do
+        linked_source="$(readlink "$target_link")"
+        case "$linked_source" in
+            "$source_path"/*)
+                if [ ! -e "$linked_source" ]; then
+                    rm "$target_link"
+                    info "Removed stale managed symlink $target_link"
+                fi
+                ;;
+        esac
+    done < <(find "$target_path" -type l)
+    while IFS= read -r source_file; do
+        relative_path="${source_file#"$source_path/"}"
+        target_file="$target_path/$relative_path"
+        target_parent="$(dirname "$target_file")"
+        if [ -L "$target_parent" ]; then
+            error "Refusing to follow unmanaged directory symlink: $target_parent"
+            exit 1
+        fi
+        mkdir -p "$target_parent"
+        if [ -e "$target_file" ] && [ ! -L "$target_file" ]; then
+            backup_path="$target_file.backup.$(date +%Y%m%d%H%M%S)"
+            mv "$target_file" "$backup_path"
+            info "Backed up existing $target_file to $backup_path"
+        elif [ -L "$target_file" ] && [ "$(readlink "$target_file")" != "$source_file" ]; then
+            error "Refusing to replace unmanaged symlink: $target_file"
+            exit 1
+        else
+            remove_symlink "$target_file"
+        fi
+        ln -s "$source_file" "$target_file"
+    done < <(find "$source_path" -type f)
+    success "Linked OpenCode $directory files"
+done
 
 # ============================================
 # 12. Install VS Code Extensions
@@ -267,9 +334,8 @@ echo "     cat ~/.ssh/id_ed25519.pub"
 echo "     https://github.com/settings/keys"
 echo "  2. Restart your terminal"
 echo "  3. Run: nvm install node"
-echo "  4. Configure Opencode API keys:"
-echo "     cp ~/dotfiles/opencode/opencode.json.template ~/.opencode/opencode.json"
-echo "     # Edit ~/.opencode/opencode.json and add your Fireworks API key"
+echo "  4. Configure Opencode credentials:"
+echo "     # Populate the local credential files documented in opencode/README.md"
 echo "  5. (Optional) Generate GPG key for signed commits:"
 echo "     gpg --full-generate-key"
 echo "     git config --global commit.gpgsign true"

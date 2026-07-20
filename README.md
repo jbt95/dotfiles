@@ -58,10 +58,8 @@ cd dotfiles
    ```
 
 4. **Configure Opencode:**
-   ```bash
-   cp ~/dotfiles/opencode/opencode.json.template ~/.opencode/opencode.json
-   # Edit the file and add your Fireworks AI API key
-   ```
+   The installer preserves an existing config and creates a template only when none exists. Populate the local
+   credential files documented in `opencode/README.md`.
 
 5. **Restart your terminal** or run:
    ```bash
@@ -91,7 +89,7 @@ cd dotfiles
 - **Bun** - JavaScript runtime
 - **Docker** - Containerization (install Docker Desktop separately)
 - **WebStorm** - JetBrains IDE for JavaScript/TypeScript
-- **Opencode** - AI coding assistant (Fireworks AI powered)
+- **OpenCode** - AI coding assistant with portable agents, commands, skills, and MCP configuration
 
 ### Productivity Tools
 - **Raycast** - Spotlight replacement with powerful extensions
