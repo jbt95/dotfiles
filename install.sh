@@ -295,7 +295,59 @@ for directory in agents command skills; do
 done
 
 # ============================================
-# 12. Install VS Code Extensions
+# 12. Setup Pi configuration
+# ============================================
+info "Setting up Pi configuration..."
+mkdir -p "$HOME/.pi/agent"
+
+link_pi_file() {
+    local relative_path="$1"
+    local source_file="$DOTFILES_DIR/.pi/$relative_path"
+    local target_file="$HOME/.pi/$relative_path"
+
+    [ -f "$source_file" ] || return 0
+    mkdir -p "$(dirname "$target_file")"
+
+    if [ -L "$target_file" ]; then
+        if [ "$(readlink "$target_file")" != "$source_file" ]; then
+            error "Refusing to replace unmanaged symlink: $target_file"
+            exit 1
+        fi
+        rm "$target_file"
+    elif [ -e "$target_file" ]; then
+        backup_path="$target_file.backup.$(date +%Y%m%d%H%M%S)"
+        mv "$target_file" "$backup_path"
+        info "Backed up existing $target_file to $backup_path"
+    fi
+
+    ln -s "$source_file" "$target_file"
+}
+
+pi_managed_files=(
+    "agent/AGENTS.md"
+    "agent/settings.json"
+    "agent/mcp.json"
+    "agent/taskplane/preferences.json"
+    "agent/extensions/pi-permission-system/config.json"
+    "agent/extensions/subagent/config.json"
+)
+
+for relative_path in "${pi_managed_files[@]}"; do
+    link_pi_file "$relative_path"
+done
+
+for directory in agents prompts; do
+    while IFS= read -r source_file; do
+        relative_path="${source_file#"$DOTFILES_DIR/.pi/"}"
+        link_pi_file "$relative_path"
+    done < <(find "$DOTFILES_DIR/.pi/agent/$directory" -type f 2>/dev/null)
+done
+
+success "Linked Pi configuration"
+warning "Pi MCP credentials remain machine-local in ~/.config/pi/mcp.zsh"
+
+# ============================================
+# 13. Install VS Code Extensions
 # ============================================
 if command -v code &> /dev/null; then
     info "Installing VS Code extensions..."

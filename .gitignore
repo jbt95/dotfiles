@@ -1,0 +1,16 @@
+# Pi runtime state and credentials
+.pi/agent/auth.json
+.pi/agent/trust.json
+.pi/agent/models-store.json
+.pi/agent/*cache*.json
+.pi/agent/mcp-oauth/
+.pi/agent/sessions/
+.pi/agent/npm/
+.pi/agent/bin/
+.pi/agent/extensions/**/logs/
+
+# Local/private shell credentials
+*.env
+*.env.*
+*.pem
+*.key

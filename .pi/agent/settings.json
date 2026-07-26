@@ -1,9 +1,17 @@
 {
-  "lastChangelogVersion": "0.67.2",
-  "defaultProvider": "fireworks",
-  "defaultModel": "accounts/fireworks/routers/kimi-k2p5-turbo",
-  "defaultThinkingLevel": "high",
-  "theme": "catppuccin-macchiato",
+  "packages": [
+    "npm:pi-subagents",
+    "npm:latchkey",
+    "npm:taskplane",
+    "npm:pi-lens",
+    "npm:pi-mcp-adapter@2.11.0",
+    "npm:@gotgenes/pi-permission-system@20.10.0",
+    "npm:@plannotator/pi-extension@0.24.2"
+  ],
+  "defaultProjectTrust": "ask",
+  "enableInstallTelemetry": false,
+  "enableAnalytics": false,
+  "enableSkillCommands": true,
   "compaction": {
     "enabled": true,
     "reserveTokens": 16384,
@@ -11,17 +19,13 @@
   },
   "retry": {
     "enabled": true,
-    "maxRetries": 3
+    "maxRetries": 3,
+    "baseDelayMs": 2000
   },
-  "enableSkillCommands": true,
-  "packages": [
-    "npm:@sherif-fanous/pi-catppuccin",
-    "npm:pi-subagents",
-    "npm:taskplane",
-    "npm:@plannotator/pi-extension",
-    "npm:pi-web-access",
-    "npm:pi-markdown-preview",
-    "npm:pi-powerline-footer",
-    "npm:pi-lens"
-  ]
+  "lastChangelogVersion": "0.82.0",
+  "theme": "dark/dark",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": false
 }
