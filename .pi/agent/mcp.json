@@ -45,6 +45,9 @@
       ],
       "lifecycle": "lazy",
       "directTools": true
+    },
+    "context-mode": {
+      "command": "context-mode"
     }
   }
 }

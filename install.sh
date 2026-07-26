@@ -300,6 +300,48 @@ done
 info "Setting up Pi configuration..."
 mkdir -p "$HOME/.pi/agent"
 
+PI_BACKUP_TIMESTAMP="$(date +%Y%m%d%H%M%S)"
+PI_BACKUP_ROOT="$HOME/.pi/backups/$PI_BACKUP_TIMESTAMP"
+
+backup_pi_file() {
+    local relative_path="$1"
+    local target_file="$2"
+    local backup_path="$PI_BACKUP_ROOT/$relative_path"
+
+    mkdir -p "$(dirname "$backup_path")"
+    chmod 700 "$HOME/.pi/backups" "$PI_BACKUP_ROOT"
+    if [ -e "$backup_path" ]; then
+        error "Refusing to overwrite Pi backup: $backup_path"
+        exit 1
+    fi
+    mv "$target_file" "$backup_path"
+    chmod 600 "$backup_path"
+    info "Backed up existing $target_file to $backup_path"
+}
+
+organize_legacy_pi_backups() {
+    local backup_file timestamp original_path relative_path backup_path
+
+    while IFS= read -r backup_file; do
+        timestamp="${backup_file##*.backup.}"
+        original_path="${backup_file%.backup.*}"
+        relative_path="${original_path#"$HOME/.pi/"}"
+        backup_path="$HOME/.pi/backups/$timestamp/$relative_path"
+        mkdir -p "$(dirname "$backup_path")"
+        chmod 700 "$HOME/.pi/backups" "$HOME/.pi/backups/$timestamp"
+        if [ -e "$backup_path" ]; then
+            error "Refusing to overwrite Pi backup: $backup_path"
+            exit 1
+        fi
+        mv "$backup_file" "$backup_path"
+        chmod 600 "$backup_path"
+        info "Moved legacy Pi backup to $backup_path"
+    done < <(
+        find "$HOME/.pi/agent" -type f -name '*.backup.*' \
+            -not -path "$HOME/.pi/agent/npm/*" 2>/dev/null
+    )
+}
+
 link_pi_file() {
     local relative_path="$1"
     local source_file="$DOTFILES_DIR/.pi/$relative_path"
@@ -315,33 +357,86 @@ link_pi_file() {
         fi
         rm "$target_file"
     elif [ -e "$target_file" ]; then
-        backup_path="$target_file.backup.$(date +%Y%m%d%H%M%S)"
-        mv "$target_file" "$backup_path"
-        info "Backed up existing $target_file to $backup_path"
+        if cmp -s "$source_file" "$target_file"; then
+            rm "$target_file"
+        else
+            backup_pi_file "$relative_path" "$target_file"
+        fi
     fi
 
     ln -s "$source_file" "$target_file"
 }
 
-pi_managed_files=(
+copy_mutable_pi_file() {
+    local relative_path="$1"
+    local source_file="$DOTFILES_DIR/.pi/$relative_path"
+    local target_file="$HOME/.pi/$relative_path"
+
+    [ -f "$source_file" ] || return 0
+    mkdir -p "$(dirname "$target_file")"
+
+    if [ -L "$target_file" ]; then
+        if [ "$(readlink "$target_file")" != "$source_file" ]; then
+            error "Refusing to replace unmanaged symlink: $target_file"
+            exit 1
+        fi
+        rm "$target_file"
+    elif [ -e "$target_file" ]; then
+        if cmp -s "$source_file" "$target_file"; then
+            return 0
+        fi
+        backup_pi_file "$relative_path" "$target_file"
+    fi
+
+    cp "$source_file" "$target_file"
+    info "Copied mutable Pi configuration to $target_file"
+}
+
+organize_legacy_pi_backups
+
+pi_linked_files=(
     "agent/AGENTS.md"
-    "agent/settings.json"
-    "agent/mcp.json"
     "agent/taskplane/preferences.json"
     "agent/extensions/pi-permission-system/config.json"
     "agent/extensions/subagent/config.json"
 )
 
-for relative_path in "${pi_managed_files[@]}"; do
+for relative_path in "${pi_linked_files[@]}"; do
     link_pi_file "$relative_path"
 done
 
-for directory in agents prompts; do
+for relative_path in agent/settings.json agent/mcp.json; do
+    copy_mutable_pi_file "$relative_path"
+done
+
+for directory in agents prompts skills; do
     while IFS= read -r source_file; do
         relative_path="${source_file#"$DOTFILES_DIR/.pi/"}"
         link_pi_file "$relative_path"
     done < <(find "$DOTFILES_DIR/.pi/agent/$directory" -type f 2>/dev/null)
 done
+
+# Make the ILC toolkit integration available to every Pi session. The extension
+# scopes its tools, skills, status, autocomplete, and policy guard to ~/work.
+ilc_extension_source="$HOME/work/ilc-agent-toolkit/pi/extensions/ilc-toolkit"
+ilc_extension_target="$HOME/.pi/agent/extensions/ilc-toolkit"
+if [ -d "$ilc_extension_source" ]; then
+    mkdir -p "$(dirname "$ilc_extension_target")"
+    if [ -L "$ilc_extension_target" ]; then
+        if [ "$(readlink "$ilc_extension_target")" != "$ilc_extension_source" ]; then
+            error "Refusing to replace unmanaged Pi extension symlink: $ilc_extension_target"
+            exit 1
+        fi
+        rm "$ilc_extension_target"
+    elif [ -e "$ilc_extension_target" ]; then
+        error "Refusing to replace unmanaged Pi extension path: $ilc_extension_target"
+        exit 1
+    fi
+    ln -s "$ilc_extension_source" "$ilc_extension_target"
+    success "Linked the workspace-scoped ILC Pi extension"
+else
+    warning "ILC toolkit extension not found at $ilc_extension_source"
+fi
 
 success "Linked Pi configuration"
 warning "Pi MCP credentials remain machine-local in ~/.config/pi/mcp.zsh"

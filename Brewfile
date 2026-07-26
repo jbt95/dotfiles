@@ -8,6 +8,7 @@ brew "ripgrep"
 brew "tree"
 brew "wget"
 brew "curl"
+brew "pandoc"        # Markdown preview rendering for Pi
 
 # IDEs
 cask "webstorm"

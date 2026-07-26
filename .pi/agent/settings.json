@@ -4,9 +4,14 @@
     "npm:latchkey",
     "npm:taskplane",
     "npm:pi-lens",
-    "npm:pi-mcp-adapter@2.11.0",
+    "npm:pi-mcp-adapter@2.15.0",
     "npm:@gotgenes/pi-permission-system@20.10.0",
-    "npm:@plannotator/pi-extension@0.24.2"
+    "npm:@plannotator/pi-extension@0.24.2",
+    "npm:context-mode",
+    "npm:@zigai/pi-mention-project",
+    "npm:pi-web-access",
+    "npm:@victor-software-house/pi-curated-themes",
+    "npm:pi-markdown-preview"
   ],
   "defaultProjectTrust": "ask",
   "enableInstallTelemetry": false,
@@ -23,7 +28,7 @@
     "baseDelayMs": 2000
   },
   "lastChangelogVersion": "0.82.0",
-  "theme": "dark/dark",
+  "theme": "vesper",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.6-sol",
   "defaultThinkingLevel": "medium",

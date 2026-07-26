@@ -1,4 +1,7 @@
 # Pi runtime state and credentials
+.pi-subagents/
+.pi/agents/
+.pi/taskplane.json
 .pi/agent/auth.json
 .pi/agent/trust.json
 .pi/agent/models-store.json

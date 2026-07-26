@@ -18,8 +18,9 @@ This repository contains configuration files and scripts to set up a new MacBook
 | `ssh/config` | SSH configuration template |
 | `ghostty/` | Ghostty terminal configuration |
 | `opencode/` | Opencode AI assistant configuration |
-| `.pi/` | Portable Pi settings, agents, prompts, and MCP configuration |
+| `.pi/` | Portable Pi settings, agents, prompts, skills, and MCP configuration |
 | `install.sh` | Automated setup script |
+| `sync-pi.sh` | Synchronizes mutable Pi settings without relying on fragile file symlinks |
 
 ## Quick Start
 
@@ -74,7 +75,14 @@ cd dotfiles
    `PI_MCP_CONTEXT7_API_KEY`. The tracked Zsh configuration sources this
    private file; it must never be committed.
 
-6. **Restart your terminal** or run:
+6. **Link the workspace ILC Pi extension:**
+   When `~/work/ilc-agent-toolkit` exists, the installer links its tested Pi
+   extension into `~/.pi/agent/extensions/`. The extension is globally loaded
+   but activates its ILC tools and policies only for projects under `~/work`.
+   Clone and build the toolkit first, then rerun this installer if it was not
+   available during initial setup.
+
+7. **Restart your terminal** or run:
 
    ```bash
    source ~/.zshrc
@@ -168,10 +176,31 @@ brew update && brew upgrade
 
 ### Sync dotfiles changes
 
-Since configs are symlinked, edits to files in this repo are immediately active. Commit and push changes:
+Most configs are symlinked, so repository edits are immediately active. Pi can
+rewrite `settings.json` and `mcp.json` atomically, which would replace file-level
+symlinks. Those two mutable files are regular copies managed explicitly:
 
 ```bash
 cd ~/dotfiles
+./sync-pi.sh status  # Compare live and repository copies
+./sync-pi.sh pull    # Copy intentional live changes into this repository
+./sync-pi.sh push    # Restore repository copies into ~/.pi
+```
+
+`pull` refuses to copy literal MCP credentials; tracked MCP authentication must
+remain environment-variable based. Before replacing a changed live file,
+`push` stores it under `~/.pi/backups/<timestamp>/`.
+
+Validate Pi linking, backup, synchronization, and credential safeguards with:
+
+```bash
+./tests/pi-config.test.sh
+```
+
+After pulling intentional changes, review and commit them:
+
+```bash
+git diff
 git add .
 git commit -m "Update configs"
 git push origin main
