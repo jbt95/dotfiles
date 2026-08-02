@@ -21,6 +21,7 @@
   "permission": {
     "external_directory": {
       "*": "allow",
+      "~/work/**": "allow",
       "~/.config/opencode/**": "allow",
       "**/.ssh/**": "deny",
       "**/.aws/**": "deny",
@@ -30,6 +31,13 @@
     "edit": "allow",
     "bash": {
       "*": "allow",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git show*": "allow",
+      "git rev-parse*": "allow",
+      "git merge-base*": "allow",
+      "git branch --show-current*": "allow",
       "printenv *": "deny",
       "env": "deny",
       "env *": "deny",
@@ -46,41 +54,53 @@
       "cat *.pem": "deny",
       "cat *.key": "deny",
       "cat **/.aws/**": "deny",
-      "cat **/.ssh/**": "deny"
+      "cat **/.ssh/**": "deny",
+      "terraform apply*": "deny",
+      "terraform * apply*": "deny",
+      "terraform destroy*": "deny",
+      "terraform * destroy*": "deny",
+      "tofu apply*": "deny",
+      "tofu * apply*": "deny",
+      "tofu destroy*": "deny",
+      "tofu * destroy*": "deny",
+      "rm -rf*": "deny",
+      "rm * -rf*": "deny"
     },
     "webfetch": "allow",
-    "read": {
-      "*": "allow",
-      "*.env": "deny",
-      "*.env.*": "deny",
-      "*.envrc": "deny",
-      "**/.env": "deny",
-      "**/.env.*": "deny",
-      "**/.envrc": "deny",
-      ".dev.vars": "deny",
-      "**/.dev.vars": "deny",
-      "secrets/*": "deny",
-      "**/secrets/**": "deny",
-      "*.pem": "deny",
-      "*.key": "deny",
-      "**/.aws/**": "deny",
-      "**/.ssh/**": "deny",
-      "~/.local/share/opencode/auth.json": "deny",
-      "~/.local/share/opencode/mcp-auth.json": "deny",
-      "~/.config/opencode/secrets/**": "deny"
-    },
+    "read": "allow",
     "grep": "allow",
     "glob": "allow",
     "list": "allow",
     "skill": {
       "*": "allow"
-    }
+    },
+    "context7_resolve-library-id": "deny",
+    "context7_query-docs": "deny",
+    "gh_grep_searchGitHub": "deny",
+    "opensrc_execute": "deny"
   },
   "tools": {
     "todowrite": true,
     "todoread": true
   },
+  "tool_output": {
+    "max_lines": 200,
+    "max_bytes": 8192
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 10000
+  },
+  "experimental": {
+    "mcp_timeout": 30000
+  },
   "mcp": {
+    "atlassian": {
+      "type": "remote",
+      "url": "https://mcp.atlassian.com/v1/mcp/authv2",
+      "enabled": false
+    },
     "cloudflare-docs": {
       "type": "remote",
       "url": "https://docs.mcp.cloudflare.com/mcp",
@@ -90,7 +110,7 @@
       "type": "remote",
       "url": "https://mcp.context7.com/mcp",
       "headers": {
-        "CONTEXT7_API_KEY": "{file:~/.config/opencode/secrets/context7-api-key}"
+        "CONTEXT7_API_KEY": "{env:PI_MCP_CONTEXT7_API_KEY}"
       },
       "enabled": true
     },

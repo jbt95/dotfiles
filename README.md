@@ -23,6 +23,7 @@ intentionally kept outside the repository.
 | `.agents/`                    | VS Code agent skills and customizations                             |
 | `install.sh`                  | New-Mac setup for the tracked personal configuration                |
 | `sync-pi.sh`                  | Safe synchronization for mutable Pi files                           |
+| `sync-opencode.sh`            | Safe synchronization for mutable OpenCode files                     |
 | `sync-omp.sh`                 | Safe synchronization for the allowlisted Oh My Pi files             |
 | `validate-portable-mcp.py`    | Rejects literal MCP credentials                                     |
 | `validate-personal-config.py` | Rejects known company markers in pulled files                       |
@@ -96,8 +97,24 @@ to `~/.omp/agent`.
 
 OpenCode resources are installed under `~/.config/opencode`. The template is
 copied only when no user configuration exists; the global instructions and DCP
-configuration are managed regular files, while resource directories retain the
-existing managed-link behavior. See `opencode/README.md` for details.
+configuration are managed as regular files, and resource directories
+(`agents/`, `command/`, `skills/`) are managed as symlinks per tracked file.
+Local files not tracked and runtime directories (`node_modules/`,
+`context-mode/`, `secrets/`) are preserved. See `opencode/README.md` for
+details.
+
+OpenCode files and tracked resources are synchronized similarly to Pi:
+
+```bash
+cd ~/dotfiles
+./sync-opencode.sh status
+./sync-opencode.sh pull
+./sync-opencode.sh push
+```
+
+`push` backs up changed live OpenCode files under
+`~/.config/opencode/backups/<timestamp>/`. The synchronizer validates every
+pulled file and rejects company markers before changing the repository.
 
 Pi's mutable settings are regular copies because Pi can rewrite them
 atomically:

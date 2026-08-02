@@ -12,6 +12,9 @@ The tracked template contains neutral settings and no literal credentials.
 - Files under `agents/`, `command/`, and `skills/` use the existing managed
   resource-link behavior. Unrelated local files are preserved.
 
+Use `../sync-opencode.sh` for ongoing synchronization of all managed OpenCode
+files and tracked resources.
+
 ## Local secret convention
 
 The installer creates only the empty Context7 file when it is absent:
