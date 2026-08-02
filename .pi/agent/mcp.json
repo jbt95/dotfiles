@@ -1,0 +1,50 @@
+{
+  "settings": {
+    "directTools": false,
+    "autoAuth": false,
+    "outputGuard": true,
+    "idleTimeout": 10,
+    "requestTimeoutMs": 60000
+  },
+  "mcpServers": {
+    "cloudflare-docs": {
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+      "lifecycle": "lazy"
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${PI_MCP_CONTEXT7_API_KEY}"
+      },
+      "lifecycle": "lazy",
+      "directTools": true
+    },
+    "gh_grep": {
+      "url": "https://mcp.grep.app",
+      "lifecycle": "lazy",
+      "directTools": true
+    },
+    "opensrc": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "opensrc-mcp@0.3.0"
+      ],
+      "lifecycle": "lazy",
+      "directTools": true
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.78"
+      ],
+      "lifecycle": "lazy",
+      "directTools": true,
+      "enabled": false
+    },
+    "context-mode": {
+      "command": "context-mode"
+    }
+  }
+}

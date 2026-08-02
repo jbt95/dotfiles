@@ -1,0 +1,61 @@
+{
+  "packages": [
+    "npm:pi-subagents",
+    "npm:pi-lens",
+    "npm:pi-mcp-adapter@2.15.0",
+    "npm:@plannotator/pi-extension@0.24.2",
+    "npm:context-mode",
+    "npm:@zigai/pi-mention-project",
+    "npm:pi-web-access",
+    "npm:@victor-software-house/pi-curated-themes",
+    "npm:pi-skill-toggle",
+    "npm:pi-cozy-ui",
+    "npm:pi-ultra-compact",
+    "npm:pi-context-usage"
+  ],
+  "subagents": {
+    "agentOverrides": {
+      "advisor": {
+        "disabled": true
+      }
+    }
+  },
+  "defaultProjectTrust": "ask",
+  "enableInstallTelemetry": false,
+  "enableAnalytics": false,
+  "enableSkillCommands": true,
+  "instructions": {
+    "globalPaths": [
+      "AGENTS.md"
+    ],
+    "projectPaths": []
+  },
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 35000,
+    "keepRecentTokens": 30000
+  },
+  "toolOutput": {
+    "maxLines": 500,
+    "maxBytes": 20000
+  },
+  "retry": {
+    "enabled": true,
+    "maxRetries": 3,
+    "baseDelayMs": 2000
+  },
+  "lastChangelogVersion": "0.83.0",
+  "theme": "cozy-dark",
+  "shellPath": "/bin/zsh",
+  "logLevel": "INFO",
+  "shareEnabled": false,
+  "snapshotEnabled": true,
+  "defaultProvider": "github-copilot",
+  "defaultModel": "kimi-k2.7-code",
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": false,
+  "skills": [
+    "+skills/batch-grill-me/SKILL.md",
+    "+skills/find-skills/SKILL.md"
+  ]
+}
