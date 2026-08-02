@@ -1,25 +1,35 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate": true,
-  "default_agent": "plan",
+  "autoupdate": "notify",
+  "default_agent": "build",
+  "shell": "/bin/zsh",
+  "logLevel": "INFO",
+  "share": "disabled",
+  "snapshot": true,
   "instructions": [
-    "AGENTS.md",
-    "CONTRIBUTING.md",
-    "docs/**/*.md"
+    "AGENTS.md"
   ],
+  "skills": {
+    "paths": ["~/.agents/skills"]
+  },
   "plugin": [
-    "@plannotator/opencode@latest"
+    "@plannotator/opencode@0.25.0",
+    "opencode-notify@0.3.1",
+    "context-mode@1.0.169",
+    "@tarquinen/opencode-dcp@3.1.14"
   ],
   "permission": {
     "external_directory": {
       "*": "allow",
+      "~/.config/opencode/**": "allow",
       "**/.ssh/**": "deny",
       "**/.aws/**": "deny",
+      "~/.local/share/opencode/auth.json": "deny",
       "~/.local/share/opencode/mcp-auth.json": "deny"
     },
     "edit": "allow",
     "bash": {
-      "*": "ask",
+      "*": "allow",
       "printenv *": "deny",
       "env": "deny",
       "env *": "deny",
@@ -55,6 +65,7 @@
       "*.key": "deny",
       "**/.aws/**": "deny",
       "**/.ssh/**": "deny",
+      "~/.local/share/opencode/auth.json": "deny",
       "~/.local/share/opencode/mcp-auth.json": "deny",
       "~/.config/opencode/secrets/**": "deny"
     },
@@ -70,25 +81,10 @@
     "todoread": true
   },
   "mcp": {
-    "atlassian": {
-      "type": "remote",
-      "url": "https://mcp.atlassian.com/v1/mcp/authv2",
-      "enabled": true
-    },
-    "bitbucket-mcp": {
-      "type": "remote",
-      "url": "http://127.0.0.1:3030/mcp",
-      "oauth": false,
-      "enabled": false,
-      "headers": {
-        "X-ATLASSIAN-USER-EMAIL": "{file:~/.config/opencode/secrets/atlassian-user-email}",
-        "X-BITBUCKET-API-TOKEN": "{file:~/.config/opencode/secrets/bitbucket-api-token}"
-      }
-    },
     "cloudflare-docs": {
       "type": "remote",
       "url": "https://docs.mcp.cloudflare.com/mcp",
-      "enabled": true
+      "enabled": false
     },
     "context7": {
       "type": "remote",
@@ -96,7 +92,7 @@
       "headers": {
         "CONTEXT7_API_KEY": "{file:~/.config/opencode/secrets/context7-api-key}"
       },
-      "enabled": false
+      "enabled": true
     },
     "gh_grep": {
       "type": "remote",
@@ -108,9 +104,18 @@
       "command": [
         "npx",
         "-y",
-        "opensrc-mcp"
+        "opensrc-mcp@0.3.0"
       ],
       "enabled": true
+    },
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@0.0.78"
+      ],
+      "enabled": false
     }
   },
   "watcher": {

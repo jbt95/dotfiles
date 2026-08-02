@@ -113,6 +113,28 @@ remove_symlink() {
         rm "$1"
     fi
 }
+copy_managed_file() {
+    local source_file="$1"
+    local target_file="$2"
+    local backup_path
+
+    [ -f "$source_file" ] || return 0
+    mkdir -p "$(dirname "$target_file")"
+    if [ -L "$target_file" ]; then
+        error "Refusing to replace unmanaged symlink: $target_file"
+        exit 1
+    fi
+    if [ -e "$target_file" ]; then
+        if cmp -s "$source_file" "$target_file"; then
+            return 0
+        fi
+        backup_path="$target_file.backup.$(date +%Y%m%d%H%M%S)"
+        mv "$target_file" "$backup_path"
+        info "Backed up existing $target_file to $backup_path"
+    fi
+    cp "$source_file" "$target_file"
+    chmod "$(stat -f '%Lp' "$source_file")" "$target_file"
+}
 
 # .zshrc
 backup_file "$HOME/.zshrc"
@@ -204,7 +226,29 @@ else
 fi
 
 # ============================================
-# 11. Install Opencode
+# 11. Install Pi
+# ============================================
+if ! command -v pi &> /dev/null; then
+    info "Installing Pi..."
+    curl -fsSL https://pi.dev/install.sh | sh
+    success "Pi installed"
+else
+    info "Pi already installed"
+fi
+
+# ============================================
+# 12. Install Oh My Pi
+# ============================================
+if ! command -v omp &> /dev/null; then
+    info "Installing Oh My Pi..."
+    curl -fsSL https://omp.sh/install | sh
+    success "Oh My Pi installed"
+else
+    info "Oh My Pi already installed"
+fi
+
+# ============================================
+# 13. Install Opencode
 # ============================================
 if ! command -v opencode &> /dev/null; then
     info "Installing Opencode..."
@@ -223,26 +267,30 @@ if [ -L "$HOME/.config/opencode/secrets" ]; then
 fi
 mkdir -p "$HOME/.config/opencode/secrets"
 chmod 700 "$HOME/.config/opencode/secrets"
-for credential in atlassian-user-email bitbucket-api-token context7-api-key; do
-    credential_path="$HOME/.config/opencode/secrets/$credential"
-    if [ -L "$credential_path" ]; then
-        error "Refusing to use symlinked credential file: $credential_path"
-        exit 1
-    fi
-    if [ ! -e "$credential_path" ]; then
-        touch "$credential_path"
-    fi
-    chmod 600 "$credential_path"
-done
+credential_path="$HOME/.config/opencode/secrets/context7-api-key"
+if [ -L "$credential_path" ]; then
+    error "Refusing to use symlinked credential file: $credential_path"
+    exit 1
+fi
+if [ ! -e "$credential_path" ]; then
+    touch "$credential_path"
+fi
+chmod 600 "$credential_path"
 if [ ! -f "$HOME/.config/opencode/opencode.json" ]; then
     if [ -f "$DOTFILES_DIR/opencode/opencode.json.template" ]; then
         cp "$DOTFILES_DIR/opencode/opencode.json.template" "$HOME/.config/opencode/opencode.json"
         success "Opencode config copied from template"
-        warning "Create the OpenCode credential files documented in opencode/README.md"
+        warning "Populate ~/.config/opencode/secrets/context7-api-key only when needed"
     fi
 else
     info "Opencode config already exists"
 fi
+
+for relative_path in AGENTS.md dcp.jsonc; do
+    copy_managed_file \
+        "$DOTFILES_DIR/opencode/$relative_path" \
+        "$HOME/.config/opencode/$relative_path"
+done
 
 for directory in agents command skills; do
     source_path="$DOTFILES_DIR/opencode/$directory"
@@ -295,7 +343,7 @@ for directory in agents command skills; do
 done
 
 # ============================================
-# 12. Setup Pi configuration
+# 14. Setup Pi configuration
 # ============================================
 info "Setting up Pi configuration..."
 mkdir -p "$HOME/.pi/agent"
@@ -416,33 +464,50 @@ for directory in agents prompts skills; do
     done < <(find "$DOTFILES_DIR/.pi/agent/$directory" -type f 2>/dev/null)
 done
 
-# Make the ILC toolkit integration available to every Pi session. The extension
-# scopes its tools, skills, status, autocomplete, and policy guard to ~/work.
-ilc_extension_source="$HOME/work/ilc-agent-toolkit/pi/extensions/ilc-toolkit"
-ilc_extension_target="$HOME/.pi/agent/extensions/ilc-toolkit"
-if [ -d "$ilc_extension_source" ]; then
-    mkdir -p "$(dirname "$ilc_extension_target")"
-    if [ -L "$ilc_extension_target" ]; then
-        if [ "$(readlink "$ilc_extension_target")" != "$ilc_extension_source" ]; then
-            error "Refusing to replace unmanaged Pi extension symlink: $ilc_extension_target"
-            exit 1
-        fi
-        rm "$ilc_extension_target"
-    elif [ -e "$ilc_extension_target" ]; then
-        error "Refusing to replace unmanaged Pi extension path: $ilc_extension_target"
-        exit 1
-    fi
-    ln -s "$ilc_extension_source" "$ilc_extension_target"
-    success "Linked the workspace-scoped ILC Pi extension"
-else
-    warning "ILC toolkit extension not found at $ilc_extension_source"
-fi
 
 success "Linked Pi configuration"
-warning "Pi MCP credentials remain machine-local in ~/.config/pi/mcp.zsh"
 
 # ============================================
-# 13. Install VS Code Extensions
+# 15. Setup agent skills (.agents)
+# ============================================
+info "Setting up agent skills..."
+if [ -d "$DOTFILES_DIR/.agents" ]; then
+    if [ -L "$HOME/.agents" ]; then
+        if [ "$(readlink "$HOME/.agents")" != "$DOTFILES_DIR/.agents" ]; then
+            error "Refusing to replace unmanaged symlink: $HOME/.agents"
+            exit 1
+        fi
+        rm "$HOME/.agents"
+    elif [ -e "$HOME/.agents" ]; then
+        backup_path="$HOME/.agents.backup.$(date +%Y%m%d%H%M%S)"
+        mv "$HOME/.agents" "$backup_path"
+        info "Backed up existing $HOME/.agents to $backup_path"
+    fi
+    ln -sf "$DOTFILES_DIR/.agents" "$HOME/.agents"
+    success "Linked .agents directory"
+else
+    warning "No .agents directory found in dotfiles"
+fi
+
+# ============================================
+# 16. Setup Oh My Pi configuration
+# ============================================
+info "Setting up Oh My Pi configuration..."
+if [ -L "$HOME/.omp" ]; then
+    error "Refusing to use symlinked Oh My Pi directory: $HOME/.omp"
+    exit 1
+fi
+mkdir -p "$HOME/.omp/agent"
+for relative_path in agent/config.yml agent/RULES.md agent/mcp.json; do
+    copy_managed_file \
+        "$DOTFILES_DIR/.omp/$relative_path" \
+        "$HOME/.omp/$relative_path"
+done
+success "Installed neutral Oh My Pi configuration"
+info "Install omp separately, then verify: omp config path (expected ~/.omp/agent)"
+
+# ============================================
+# 17. Install VS Code Extensions
 # ============================================
 if command -v code &> /dev/null; then
     info "Installing VS Code extensions..."
@@ -460,7 +525,7 @@ else
 fi
 
 # ============================================
-# 11. Reload shell configuration
+# 18. Reload shell configuration
 # ============================================
 info "Reloading shell configuration..."
 source "$HOME/.zshrc" 2>/dev/null || true
@@ -481,8 +546,8 @@ echo "     cat ~/.ssh/id_ed25519.pub"
 echo "     https://github.com/settings/keys"
 echo "  2. Restart your terminal"
 echo "  3. Run: nvm install node"
-echo "  4. Configure Opencode credentials:"
-echo "     # Populate the local credential files documented in opencode/README.md"
+echo "  4. Configure the optional Context7 secret in ~/.config/opencode/secrets/context7-api-key"
+echo "     Keep credentials in local files; never add them to this repository."
 echo "  5. (Optional) Generate GPG key for signed commits:"
 echo "     gpg --full-generate-key"
 echo "     git config --global commit.gpgsign true"

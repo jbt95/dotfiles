@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Opencode-DCP/opencode-dynamic-context-pruning/master/dcp.schema.json",
+  "enabled": true,
+  "autoUpdate": false,
+
+  "compress": {
+    "permission": "allow",
+
+    // Soft nudges for long sessions; native compaction remains the overflow fallback.
+    "maxContextLimit": 100000,
+    "minContextLimit": 60000,
+
+    // Keys must be providerID/modelID.
+    "modelMaxLimits": {
+      "github-copilot/kimi-k2.7-code": "80%",
+      "github-copilot/gpt-5.4": "70%",
+      "openai/gpt-5.4": "70%"
+    },
+
+    "nudgeFrequency": 5,
+    "nudgeForce": "soft",
+
+    "protectedTools": [
+      "todowrite",
+      "task"
+    ]
+  },
+
+  "strategies": {
+    "deduplication": {
+      "enabled": true,
+      "protectedTools": ["todowrite", "task"]
+    },
+
+    "purgeErrors": {
+      "enabled": true,
+      "turns": 4,
+      "protectedTools": []
+    }
+  },
+
+  "protectedFilePatterns": ["AGENTS.md"]
+}

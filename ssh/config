@@ -1,6 +1,9 @@
 # Personal SSH Config
 # Generate a new key with: ssh-keygen -t ed25519 -C "berme495@gmail.com"
 # Then add to GitHub: https://github.com/settings/keys
+# Optional machine-local hosts are kept outside this repository.
+Include ~/.ssh/config.local
+
 
 Host *
     AddKeysToAgent yes

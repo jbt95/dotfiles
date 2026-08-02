@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json",
+  "mcpServers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      },
+      "timeout": 60000,
+      "enabled": true
+    },
+    "gh_grep": {
+      "type": "http",
+      "url": "https://mcp.grep.app",
+      "timeout": 60000
+    },
+    "opensrc": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "opensrc-mcp@0.3.0"
+      ],
+      "timeout": 60000
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.78"
+      ],
+      "enabled": false,
+      "timeout": 60000
+    },
+    "context-mode": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "context-mode@1.0.169"
+      ],
+      "timeout": 60000,
+      "enabled": false
+    }
+  }
+}

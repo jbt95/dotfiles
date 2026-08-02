@@ -1,0 +1,26 @@
+symbolPreset: unicode
+theme: 
+  dark: dark-catppuccin
+  light: light
+setupVersion: 1
+defaultThinkingLevel: max
+tools: 
+  approvalMode: yolo
+security: 
+  enabled: true
+modelRoles: 
+  default: github-copilot/gpt-5.6-luna:max
+  vision: github-copilot/kimi-k2.7-code:high
+hideThinkingBlock: false
+personality: pragmatic
+dev: 
+  autoqaConsent: granted
+disabledExtensions: 
+  - skill:batch-grill-me
+  - skill:pi-agent
+  - skill:research
+  - skill:teach
+  - skill:triage
+  - skill:ubiquitous-language
+disabledProviders: 
+  - opencode

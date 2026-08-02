@@ -34,7 +34,7 @@ run_install_fragment_test() {
 
     awk '
         /# 12\. Setup Pi configuration/ { capture = 1 }
-        /# Make the ILC toolkit integration/ { capture = 0 }
+        /# 13\. Setup Oh My Pi configuration/ { capture = 0 }
         capture
     ' "$REPO_ROOT/install.sh" > "$fragment"
 
@@ -53,7 +53,6 @@ run_install_fragment_test() {
         "$home/.pi/agent/settings.json" \
         "$REPO_ROOT/.pi/agent/settings.json"
     assert_symlink "$home/.pi/agent/AGENTS.md"
-    assert_symlink "$home/.pi/agent/skills/atlassian-read/SKILL.md"
     assert_file \
         "$home/.pi/backups/20200102030405/agent/example.txt"
 
@@ -71,6 +70,10 @@ prepare_sync_fixture() {
         "$fixture/repo/.pi/agent/settings.json"
     cp "$REPO_ROOT/.pi/agent/mcp.json" \
         "$fixture/repo/.pi/agent/mcp.json"
+    cp "$REPO_ROOT/validate-portable-mcp.py" \
+        "$fixture/repo/validate-portable-mcp.py"
+    cp "$REPO_ROOT/validate-personal-config.py" \
+        "$fixture/repo/validate-personal-config.py"
     cp "$fixture/repo/.pi/agent/settings.json" \
         "$fixture/home/.pi/agent/settings.json"
     cp "$fixture/repo/.pi/agent/mcp.json" \
@@ -196,44 +199,6 @@ run_unmanaged_symlink_test() {
     assert_symlink "$fixture/home/.pi/agent/settings.json"
 }
 
-run_atlassian_url_validation_test() {
-    local common_reference helpers
-    common_reference="$REPO_ROOT/.pi/agent/skills/atlassian-read/references/common.md"
-    helpers="$TEST_ROOT/atlassian-common-helpers.sh"
-    python3 - "$common_reference" "$helpers" <<'PY'
-import re
-import sys
-
-source_path, target_path = sys.argv[1:]
-source = open(source_path, encoding="utf-8").read()
-match = re.search(r"```sh\n([\s\S]*?)```", source)
-if not match:
-    raise SystemExit("No shell helper block found")
-with open(target_path, "w", encoding="utf-8") as target:
-    target.write(match.group(1))
-PY
-
-    bash -n "$helpers"
-    bash -s -- "$helpers" <<'SH'
-set -e
-source "$1"
-[ "$(validate_atlassian_site_url 'https://example.atlassian.net/')" = \
-    "https://example.atlassian.net" ]
-for url in \
-    'http://example.atlassian.net' \
-    'https://attacker.example/x.atlassian.net' \
-    'https://example.atlassian.net/path' \
-    'https://example.atlassian.net?token=value' \
-    'https://user@example.atlassian.net' \
-    'https://example.atlassian.net:443'
-do
-    if validate_atlassian_site_url "$url" >/dev/null 2>&1; then
-        printf 'Unsafe Atlassian URL was accepted: %s\n' "$url" >&2
-        exit 1
-    fi
-done
-SH
-}
 
 bash -n "$REPO_ROOT/install.sh"
 bash -n "$REPO_ROOT/sync-pi.sh"
@@ -242,5 +207,4 @@ run_sync_round_trip_test
 run_secret_validation_tests
 run_portable_header_test
 run_unmanaged_symlink_test
-run_atlassian_url_validation_test
 printf 'Pi configuration tests passed\n'

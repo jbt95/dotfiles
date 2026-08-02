@@ -10,9 +10,6 @@ brew "wget"
 brew "curl"
 brew "pandoc"        # Markdown preview rendering for Pi
 
-# IDEs
-cask "webstorm"
-
 # Productivity Tools
 cask "raycast"        # Spotlight replacement with extensions
 cask "contexts"       # Window switcher with search

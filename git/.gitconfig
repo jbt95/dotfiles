@@ -26,3 +26,6 @@
 	ci = commit
 	lg = log --oneline --graph --decorate
 	last = log -1 HEAD
+
+[includeIf "gitdir:~/work/"]
+	path = ~/.config/git/work.inc

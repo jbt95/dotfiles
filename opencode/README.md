@@ -1,34 +1,39 @@
 # OpenCode Configuration
 
-The installer places the global configuration under `~/.config/opencode`, OpenCode's supported global config
-location. The template contains no credentials.
+The installer places the global configuration under `~/.config/opencode`.
+The tracked template contains neutral settings and no literal credentials.
 
-## Managed Files
+## Managed files
 
-- `opencode.json.template` is copied to `~/.config/opencode/opencode.json` only when no config exists.
-- Files under `agents/`, `command/`, and `skills/` are symlinked into `~/.config/opencode/`.
-- Existing conflicting files are moved to timestamped backups. Unrelated local files are preserved.
+- `opencode.json.template` is copied to `~/.config/opencode/opencode.json` only
+  when no user configuration exists.
+- `AGENTS.md` and `dcp.jsonc` are installed as regular managed files. A changed
+  file is backed up before replacement, and an unmanaged symlink is refused.
+- Files under `agents/`, `command/`, and `skills/` use the existing managed
+  resource-link behavior. Unrelated local files are preserved.
 
-## Local Credentials
+## Local secret convention
 
-The installer creates empty local credential files that are never tracked. Populate the services you use:
+The installer creates only the empty Context7 file when it is absent:
 
 ```bash
-$EDITOR ~/.config/opencode/secrets/atlassian-user-email
-$EDITOR ~/.config/opencode/secrets/bitbucket-api-token
 $EDITOR ~/.config/opencode/secrets/context7-api-key
+chmod 600 ~/.config/opencode/secrets/context7-api-key
 ```
 
-OpenCode expands `{file:path}` references internally, keeping credentials out of its shell environment. Do not
-replace them with literal credentials in the tracked template.
+The template uses OpenCode's `{file:~/.config/opencode/secrets/context7-api-key}`
+reference. Keep secret directories outside the repository and never replace a
+reference with a literal value.
 
-The Bitbucket MCP entry is disabled by default because it requires a separately managed local service on port
-3030. Context7 is also disabled until its key is populated. Enable either only after its dependency and
-credentials are configured.
+The tracked MCP entries are generic documentation and development services.
+Company or workstation-specific MCP servers and credentials are deliberately
+not tracked; add those only through a supported local configuration layer and
+keep their values in local files or a credential manager.
 
 ## Validate
 
-After installation and environment setup:
+After installation and configuration changes, inspect the resources with the
+OpenCode diagnostics available on the machine, for example:
 
 ```bash
 opencode debug agent change-reviewer
@@ -36,4 +41,4 @@ opencode debug agent java-spring-specialist
 opencode debug skill
 ```
 
-Quit and restart OpenCode after changing any configuration-time file.
+Quit and restart OpenCode after changing a configuration-time file.

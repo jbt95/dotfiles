@@ -1,229 +1,149 @@
 # Personal Dotfiles
 
-My development environment configuration for macOS.
+Personal-only macOS configuration for a portable development workstation.
 
-## Overview
-
-This repository contains configuration files and scripts to set up a new MacBook for development.
+This repository contains neutral shell, Git, SSH, terminal, editor-extension,
+OpenCode, Pi, and Oh My Pi preferences. Secrets, authentication stores,
+runtime state, machine-specific paths, and work-only configuration are
+intentionally kept outside the repository.
 
 ## Contents
 
-| File/Directory | Description |
-| ---------------- | ------------- |
-| `Brewfile` | Homebrew packages and VS Code extensions |
-| `zsh/.zshrc` | Zsh shell configuration with aliases |
-| `zsh/.zprofile` | Zsh login shell configuration |
-| `git/.gitconfig` | Git configuration with personal email |
-| `vscode/extensions.txt` | List of VS Code extensions |
-| `ssh/config` | SSH configuration template |
-| `ghostty/` | Ghostty terminal configuration |
-| `opencode/` | Opencode AI assistant configuration |
-| `.pi/` | Portable Pi settings, agents, prompts, skills, and MCP configuration |
-| `install.sh` | Automated setup script |
-| `sync-pi.sh` | Synchronizes mutable Pi settings without relying on fragile file symlinks |
+| File or directory             | Purpose                                                             |
+| ----------------------------- | ------------------------------------------------------------------- |
+| `Brewfile`                    | Homebrew packages and VS Code extensions                            |
+| `zsh/`                        | Portable interactive and login shell configuration                  |
+| `git/.gitconfig`              | Personal Git defaults and conditional local include                 |
+| `ssh/config`                  | Personal SSH template with a local include hook                     |
+| `ghostty/`                    | Ghostty terminal configuration                                      |
+| `vscode/extensions.txt`       | VS Code extension list                                              |
+| `opencode/`                   | Neutral global OpenCode configuration and resources                 |
+| `.pi/`                        | Portable Pi settings, resources, and generic MCP configuration      |
+| `.omp/agent/`                 | Portable Oh My Pi preferences, rules, and generic MCP configuration |
+| `.agents/`                    | VS Code agent skills and customizations                             |
+| `install.sh`                  | New-Mac setup for the tracked personal configuration                |
+| `sync-pi.sh`                  | Safe synchronization for mutable Pi files                           |
+| `sync-omp.sh`                 | Safe synchronization for the allowlisted Oh My Pi files             |
+| `validate-portable-mcp.py`    | Rejects literal MCP credentials                                     |
+| `validate-personal-config.py` | Rejects known company markers in pulled files                       |
 
-## Quick Start
+## Boundary
 
-### 1. Clone this repository
+The repository is personal-only. Company configuration is deliberately absent
+and must be applied locally on the relevant workstation from the private
+workstation setup prompt or a credential manager. Do not put company values,
+endpoints, certificates, identities, hosts, or credentials into tracked files,
+and do not commit or push local work configuration.
+
+The installer and synchronizers only manage the paths documented here. Local
+environment files, Git identity includes, SSH host includes, secret files, and
+runtime state remain outside the repository and are ignored when they use the
+repository-side names documented below.
+
+## Quick start
 
 ```bash
-cd ~
-git clone git@github.com:jbt95/dotfiles.git
-cd dotfiles
-```
-
-### 2. Run the install script
-
-```bash
+git clone git@github.com:jbt95/dotfiles.git ~/dotfiles
+cd ~/dotfiles
 ./install.sh
 ```
 
-### 3. Post-installation steps
+The installer manages the personal files and neutral resources. Install the
+`omp` binary separately; after installation, `omp config path` should resolve
+to `~/.omp/agent`.
 
-1. **Add SSH key to GitHub:**
-   The install script generated a new SSH key. Add it to GitHub:
+## Post-installation
+
+1. Add the generated personal SSH public key to GitHub:
 
    ```bash
    cat ~/.ssh/id_ed25519.pub
    ```
 
-   Then visit: <https://github.com/settings/keys>
-
-2. **Install Node.js:**
+2. Install Node.js when needed:
 
    ```bash
    nvm install node
    ```
 
-3. **(Optional) Generate GPG key for signed commits:**
+3. Optionally create a personal GPG key. Keep private GPG data outside this
+   repository.
 
-   ```bash
-   gpg --full-generate-key
-   git config --global commit.gpgsign true
-   git config --global user.signingkey YOUR_KEY_ID
-   ```
+4. OpenCode creates only the local Context7 secret file when it is absent:
+   `~/.config/opencode/secrets/context7-api-key`. Populate it only if that
+   service is needed; the tracked configuration uses a file reference.
 
-4. **Configure Opencode:**
-   The installer preserves an existing config and creates a template only when
-   none exists. Populate the local credential files documented in
-   `opencode/README.md`.
-
-5. **Configure Pi MCP credentials:**
-   Create `~/.config/pi/mcp.zsh`, restrict it to the current user with
-   `chmod 600`, and define these machine-local environment variables:
-   `PI_MCP_ATLASSIAN_USER_EMAIL`, `PI_MCP_BITBUCKET_API_TOKEN`, and
-   `PI_MCP_CONTEXT7_API_KEY`. The tracked Zsh configuration sources this
-   private file; it must never be committed.
-
-6. **Link the workspace ILC Pi extension:**
-   When `~/work/ilc-agent-toolkit` exists, the installer links its tested Pi
-   extension into `~/.pi/agent/extensions/`. The extension is globally loaded
-   but activates its ILC tools and policies only for projects under `~/work`.
-   Clone and build the toolkit first, then rerun this installer if it was not
-   available during initial setup.
-
-7. **Restart your terminal** or run:
+5. Restart the shell or run:
 
    ```bash
    source ~/.zshrc
    ```
 
-## What's Installed
+## Personal configuration
 
-### Homebrew Packages
+- Zsh keeps the personal aliases and development paths while loading an
+  optional `~/.config/local-env.zsh` file.
+- Git keeps the personal identity and GitHub rewrite. A local identity can be
+  supplied through `~/.config/git/work.inc` for matching repositories without
+  changing the tracked personal config.
+- SSH includes `~/.ssh/config.local` for machine-local hosts. Private keys and
+  host databases are never captured.
+- Ghostty and the VS Code extension manifest are repository-owned neutral
+  resources. User settings, keybindings, editor caches, and authentication
+  databases are not included.
 
-- `git` - Version control
-- `gnupg` - GPG for signing commits
-- `openssh` - SSH client
-- `ripgrep` - Fast search tool
-- `maven` - Java build tool
-- `openjdk` - Java SDK
-- `tfenv` - Terraform version manager
-- `terraform` - Infrastructure as Code
+## OpenCode and Pi maintenance
 
-### Zsh Configuration
+OpenCode resources are installed under `~/.config/opencode`. The template is
+copied only when no user configuration exists; the global instructions and DCP
+configuration are managed regular files, while resource directories retain the
+existing managed-link behavior. See `opencode/README.md` for details.
 
-- Oh My Zsh with `robbyrussell` theme
-- Plugins: git, zsh-autosuggestions, zsh-syntax-highlighting
-- Aliases for git, npm, docker, terraform, java, and more
-
-### Development Tools
-
-- **NVM** - Node version manager
-- **pnpm** - Fast package manager
-- **Bun** - JavaScript runtime
-- **Docker** - Containerization (install Docker Desktop separately)
-- **WebStorm** - JetBrains IDE for JavaScript/TypeScript
-- **OpenCode** - AI coding assistant with portable agents, commands, skills, and MCP configuration
-
-### Productivity Tools
-
-- **Raycast** - Spotlight replacement with powerful extensions
-- **Contexts** - Fast window switcher with search capabilities
-- **Rectangle** - Window tiling manager (snap windows to edges)
-
-### Development & DevOps
-
-- **Docker Desktop** - Container management and orchestration
-- **Ghostty** - Fast, native GPU-accelerated terminal emulator with quick terminal feature
-
-### VS Code Extensions
-
-- GitLens - Enhanced git capabilities
-- GitHub Copilot - AI pair programming
-- Terraform - HashiCorp Terraform support
-- Java Extension Pack - Java development
-- Error Lens - Inline error highlighting
-
-## Customization
-
-### Adding New Aliases
-
-Edit `zsh/.zshrc` and add to the aliases section:
-
-```bash
-alias myalias='my command'
-```
-
-### Installing New VS Code Extensions
-
-```bash
-code --install-extension publisher.extension-name
-echo "publisher.extension-name" >> vscode/extensions.txt
-```
-
-### Adding Homebrew Packages
-
-Edit `Brewfile` and add:
-
-```ruby
-brew "package-name"
-```
-
-Then run:
-
-```bash
-brew bundle
-```
-
-## Maintenance
-
-### Update all packages
-
-```bash
-brew update && brew upgrade
-```
-
-### Sync dotfiles changes
-
-Most configs are symlinked, so repository edits are immediately active. Pi can
-rewrite `settings.json` and `mcp.json` atomically, which would replace file-level
-symlinks. Those two mutable files are regular copies managed explicitly:
+Pi's mutable settings are regular copies because Pi can rewrite them
+atomically:
 
 ```bash
 cd ~/dotfiles
-./sync-pi.sh status  # Compare live and repository copies
-./sync-pi.sh pull    # Copy intentional live changes into this repository
-./sync-pi.sh push    # Restore repository copies into ~/.pi
+./sync-pi.sh status
+./sync-pi.sh pull
+./sync-pi.sh push
 ```
 
-`pull` refuses to copy literal MCP credentials; tracked MCP authentication must
-remain environment-variable based. Before replacing a changed live file,
-`push` stores it under `~/.pi/backups/<timestamp>/`.
+The Pi synchronizer validates every pulled file and rejects literal sensitive
+MCP values or company markers before changing the repository.
 
-Validate Pi linking, backup, synchronization, and credential safeguards with:
+Oh My Pi's portable allowlist is synchronized separately:
+
+```bash
+./sync-omp.sh status
+./sync-omp.sh pull
+./sync-omp.sh push
+```
+
+`push` backs up changed live OMP files under
+`~/.omp/backups/<timestamp>/agent/` with private directories. No OMP runtime
+database, session, log, cache, binary, or authentication path is managed.
+
+Run the focused configuration checks with:
 
 ```bash
 ./tests/pi-config.test.sh
+./tests/config-sync.test.sh
 ```
 
-After pulling intentional changes, review and commit them:
+Review changes before committing. Never stage protected pre-existing worktree
+changes merely because the installer or synchronizers were run.
 
-```bash
-git diff
-git add .
-git commit -m "Update configs"
-git push origin main
-```
+## Personal tools
 
-## Work vs Personal Differences
-
-| Item | Work | Personal |
-| ------ | ------ | ---------- |
-| Git email | <j.bermejo@canda.com> | <berme495@gmail.com> |
-| IDE | VS Code | VS Code + WebStorm |
-| Terminal | iTerm | Ghostty |
-| Spotlight | Default | Raycast |
-| Window Switcher | Default | Contexts |
-| Window Tiling | Default | Rectangle |
-| Containers | Docker | Docker Desktop |
-| SSL certs | Zscaler corporate certs | None (standard) |
-| VPN | Corporate VPN | Personal preference |
-| AI tools | Work-authenticated | Personal accounts |
+The tracked setup includes Homebrew, Git, OpenSSH, NVM, pnpm, Bun, Docker
+support, Maven/OpenJDK, Terraform, WebStorm, Ghostty, Raycast, Contexts,
+Rectangle, and the personal VS Code extension list. Install optional tools
+separately when they are not available on the new Mac.
 
 ## Troubleshooting
 
-### Permission denied when running install.sh
+### Permission denied when running the installer
 
 ```bash
 chmod +x install.sh
@@ -231,19 +151,16 @@ chmod +x install.sh
 
 ### Command not found after installation
 
-Restart your terminal or run:
+Restart the terminal or source the shell configuration:
 
 ```bash
 source ~/.zshrc
 ```
 
-### Homebrew not found on Apple Silicon Mac
+### Homebrew is not on PATH
 
-Add to `~/.zprofile`:
-
-```bash
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
+On Apple Silicon, add the Homebrew shell initialization to the local login
+profile rather than adding machine-specific paths to this repository.
 
 ## License
 

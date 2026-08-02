@@ -10,10 +10,76 @@
 .pi/agent/sessions/
 .pi/agent/npm/
 .pi/agent/bin/
+.pi/agent/context-mode/
+.pi/agent/backups/
 .pi/agent/extensions/**/logs/
 
-# Local/private shell credentials
+# Oh My Pi runtime state and credentials
+.omp/agent/*.db
+.omp/agent/*.db-*
+.omp/agent/*-wal
+.omp/agent/*-shm
+.omp/agent/sessions/
+.omp/agent/terminal-sessions/
+.omp/agent/run/
+.omp/agent/daemons/
+.omp/agent/blobs/
+.omp/agent/bin/
+.omp/agent/native/
+.omp/agent/backups/
+.omp/agent/*cache*.json
+.omp/agent/*.log
+.omp/agent/**/broker.token
+
+# OpenCode runtime state and credentials
+opencode/context-mode/
+opencode/secrets/
+opencode/node_modules/
+opencode/bin/
+opencode/*.db
+opencode/*.db-*
+opencode/*.log
+
+# VS Code agent skills runtime state
+.agents/.skill-lock.json
+
+# Local/private shell and tool credentials
+zsh/local-env.zsh
+git/work.inc
+ssh/config.local
+*.local
+*.local.*
 *.env
 *.env.*
 *.pem
 *.key
+*.crt
+*.jks
+*.p12
+*.pfx
+**/secrets/
+**/*credential*
+**/*token
+**/*.token
+.pi/agent/run-history.jsonl
+.pi/agent/permission-forwarding/
+.omp/agent/last-changelog-version
+opencode/package.json
+opencode/package-lock.json
+opencode/.gitignore
+opencode/auth.json
+opencode/mcp-auth.json
+**/auth.json
+**/mcp-auth.json
+.npmrc
+.claude.json
+.codex/auth.json
+.mcp-auth
+.m2/settings.xml
+.m2/settings-security.xml
+.docker/.token_seed
+.copilot/
+copilot/
+.factory/
+factory/
+rovo/

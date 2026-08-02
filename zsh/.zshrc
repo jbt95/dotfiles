@@ -1,5 +1,9 @@
-# Private machine-local credentials (kept outside the dotfiles repository).
-[[ -r "$HOME/.config/pi/mcp.zsh" ]] && source "$HOME/.config/pi/mcp.zsh"
+# Machine-local environment is intentionally kept outside this repository.
+[[ -r "$HOME/.config/local-env.zsh" ]] && source "$HOME/.config/local-env.zsh"
+
+# Neutral environment defaults.
+export ALCHEMY_TELEMETRY_DISABLED=1
+export COPILOT_HOME="$HOME/.config/copilot"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
@@ -20,6 +24,18 @@ source "$ZSH/oh-my-zsh.sh"
 
 # Docker CLI
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"
+if command -v /usr/libexec/java_home >/dev/null 2>&1; then
+  JAVA_HOME="$(/usr/libexec/java_home -v 21 2>/dev/null || true)"
+  if [[ -n "$JAVA_HOME" && -d "$JAVA_HOME/bin" ]]; then
+    export JAVA_HOME
+    export PATH="$JAVA_HOME/bin:$PATH"
+  fi
+fi
+
+if [[ -d "/opt/homebrew/opt/maven/bin" ]]; then
+  export MAVEN_HOME="/opt/homebrew/opt/maven"
+  export PATH="$MAVEN_HOME/bin:$PATH"
+fi
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
@@ -148,13 +164,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # Local bin
 export PATH="$HOME/.local/bin:$PATH"
 
-# opencode
-export PATH=/Users/Jordi/.opencode/bin:$PATH
-
-# pnpm
-export PNPM_HOME="/Users/Jordi/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
+# OpenCode
+export PATH="$HOME/.opencode/bin:$PATH"
