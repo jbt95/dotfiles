@@ -54,3 +54,26 @@ Use the cheapest sufficient workflow:
 - Do not use `oracle` for routine mechanical changes.
 - After implementation, summarize changed files, validation performed,
   unresolved risks, and reviewer findings.
+
+## Parallel Implementation
+
+- Only use parallel subagents when the task decomposes into independent slices
+  with minimal shared state.
+- Launch workers with fresh context and clear, non-overlapping scopes.
+- The parent remains the sole writer: workers implement and validate, but the
+  parent synthesizes outputs and applies any cross-cutting fixes.
+- Use `worktree: true` for parallel writes only when the git worktree is clean.
+- Never launch a worker that itself calls subagents.
+
+## Pi Session Hygiene
+
+- Verify npm scripts exist before running them. Run `npm run` (or read
+  `package.json` scripts) first. Do not invoke `lint`/`typecheck`/`build`
+  unless the script exists.
+- Never attempt to read `plan.md`, `progress.md`, or `context.md` unless you
+  have confirmed via `ls`/`find` that they exist.
+- For files larger than 300 lines, use `module_report`/`symbol_search`/
+  `read_symbol` (pi-lens) before a full `read`; afterwards, `read` only the
+  relevant line ranges.
+- After small edits, run only the affected test file; run the full suite once
+  at the end.

@@ -11,7 +11,8 @@
     "npm:pi-skill-toggle",
     "npm:pi-cozy-ui",
     "npm:pi-ultra-compact",
-    "npm:pi-context-usage"
+    "npm:pi-context-usage",
+    "npm:pi-autoresearch"
   ],
   "subagents": {
     "agentOverrides": {
@@ -42,7 +43,12 @@
   "retry": {
     "enabled": true,
     "maxRetries": 3,
-    "baseDelayMs": 2000
+    "baseDelayMs": 2000,
+    "provider": {
+      "timeoutMs": 120000,
+      "maxRetries": 5,
+      "maxRetryDelayMs": 10000
+    }
   },
   "lastChangelogVersion": "0.83.0",
   "theme": "cozy-dark",
@@ -52,7 +58,7 @@
   "snapshotEnabled": true,
   "defaultProvider": "github-copilot",
   "defaultModel": "kimi-k2.7-code",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
   "skills": [
     "+skills/batch-grill-me/SKILL.md",
